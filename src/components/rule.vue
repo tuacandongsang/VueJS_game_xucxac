@@ -1,11 +1,15 @@
 <template>
-  <div class="modal" tabindex="-1" v-bind:class="{openModal : openModal == true}" >
+  <div
+    class="modal"
+    tabindex="-1"
+    v-bind:class="{ openModal: openModal == true }"
+  >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Luat choi</h5>
           <button
-          v-on:click="closeModal"
+            v-on:click="closeModal"
             type="button"
             class="btn-close"
             data-bs-dismiss="modal"
@@ -20,10 +24,13 @@
             type="button"
             class="btn btn-secondary"
             data-bs-dismiss="modal"
+            v-on:click="closeModal"
           >
             Close
           </button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-primary" v-on:click="closeModal">
+            Save changes
+          </button>
         </div>
       </div>
     </div>
@@ -33,22 +40,21 @@
 export default {
   name: "rule",
   data() {
-    return {
-
-    };
+    return {};
   },
-  props:{ 
-    openModal:{type:Boolean , default:false}
+  props: {
+    openModal: { type: Boolean, default: false },
   },
-  methods:{
-    closeModal(){
-        this.openModal = !this.openModal
-    }
-  }
+  methods: {
+    closeModal() {
+      const close = !this.openModal;
+      this.$emit("handleCloseModal", close);
+    },
+  },
 };
 </script>
 <style>
-.openModal{
-    display: block;
+.openModal {
+  display: block;
 }
 </style>

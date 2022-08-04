@@ -10,7 +10,11 @@
       v-on:handleNewgame="handleNewgame"
       />
       <Dices />
-      <ruleVue v-bind:openModal="openModal" />
+      <ruleVue v-bind:openModal="openModal" 
+        v-on:handleCloseModal="handleCloseModal"
+      
+      
+       />
       
     </div>
 
@@ -37,6 +41,9 @@ export default {
       handleNewgame(){
         console.log('tuancan');
         this.openModal = !this.openModal
+      },
+      handleCloseModal(close){
+        this.openModal = close
       }
     },
     components: { Player, Control, Dices, ruleVue }
