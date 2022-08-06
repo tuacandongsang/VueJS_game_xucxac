@@ -1,34 +1,45 @@
 <template>
-    <div>
-<button class="control btn-new"
-      v-on:click="newGame"
->
-        <i class="ion-ios-plus-outline"></i>New game
-      </button>
-      <button class="control btn-roll">
-        <i class="ion-ios-loop"></i>Roll dice
-      </button>
-      <button class="control btn-hold">
-        <i class="ion-ios-download-outline"></i>Hold
-      </button>
-
-      <input type="number" placeholder="Final score" class="final-score" />
-    </div>
+  <div>
+    <button class="control btn-new" v-on:click="newGame">
+      <i class="ion-ios-plus-outline"></i>New game
+    </button>
+    <button class="control btn-roll" v-on:click="rollDice">
+      <i class="ion-ios-loop"></i>Roll dice
+    </button>
+    <button class="control btn-hold" v-on:click="$emit('handlehold')">
+      <i class="ion-ios-download-outline"></i>Hold
+    </button>
+    <input
+      v-bind:disabled="startGame"
+      type="number"
+      placeholder="Final score"
+      class="final-score"
+      v-bind:value="finalScore"
+      v-on:input="$emit('handleChangeFinalScore', $event)"
+    />
+  </div>
 </template>
 <script>
 export default {
-    name:'Control',
-    data(){
-      return{
-        
-      }
+  name: "Control",
+  props: {
+    finalScore: { type: [Number, String], default: 100 },
+    startGame: { type: Boolean, default: false },
+  },
+  data() {
+    return {
+      valuedemo: 100,
+    };
+  },
+  methods: {
+    newGame() {
+      this.$emit("handleNewgame");
     },
-    methods:{
-      newGame(){
-        this.$emit('handleNewgame')
-      }
-    }
-}
+    rollDice() {
+      this.$emit("handleRollDice");
+    },
+  },
+};
 </script>
 <style scoped>
 .control {

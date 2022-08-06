@@ -2,20 +2,25 @@
   <div id="app">
     <div class="wrapper clearfix">
       <Player
+      v-bind:isWinner="isWinner"
         v-bind:scoresPlayer="scoresPlayer"
         v-bind:activePlayer="activePlayer"
         v-bind:currenScore="currenScore"
       />
       <Control
-      v-on:handleNewgame="handleNewgame"
+        v-bind:startGame="startGame"
+        v-on:handleNewgame="handleNewgame"
+        v-on:handleRollDice="handleRollDice"
+        v-on:handlehold="handlehold"
+        v-bind:finalScore="finalScore"
+        v-on:handleChangeFinalScore="handleChangeFinalScore"
       />
-      <Dices />
-      <ruleVue v-bind:openModal="openModal" 
+      <Dices v-bind:dices="dices" />
+      <ruleVue
+        v-bind:openModal="openModal"
         v-on:handleCloseModal="handleCloseModal"
-      
-      
-       />
-      
+        v-on:handleStart="handleStart"
+      />
     </div>
 
     <!-- <router-view/> -->
@@ -23,30 +28,91 @@
 </template>
 
 <script>
-import Player from './components/Player.vue';
-import Control from './components/Control.vue';
-import Dices from './components/Dices.vue';
-import ruleVue from './components/rule.vue';
+import Player from "./components/Player.vue";
+import Control from "./components/Control.vue";
+import Dices from "./components/Dices.vue";
+import ruleVue from "./components/rule.vue";
 export default {
-    name: "App",
-    data(){
-      return{
-        activePlayer: 1 ,
-        scoresPlayer:[13 , 30],
-        currenScore: 10,
-        openModal:false
+  name: "App",
+  data() {
+    return {
+      activePlayer: 0,
+      scoresPlayer: [13, 30],
+      currenScore: 10,
+      openModal: false,
+      startGame: false,
+      dices: [5, 4],
+      finalScore: 10,
+    };
+  },
+  computed: {
+    isWinner() {
+      // let { scoresPlayer, finalScore } = this;
+      if (this.scoresPlayer[0] >= this.finalScore || this.scoresPlayer[1] >= this.finalScore) {
+        this.startGame = false;
+        return true;
+      }
+      return false;
+    },
+  },
+  methods: {
+    handleChangeFinalScore(e) {
+      const number = parseInt(e.target.value);
+      if (isNaN(number)) {
+        this.finalScore = "";
+      } else {
+        this.finalScore = number;
       }
     },
-    methods:{
-      handleNewgame(){
-        console.log('tuancan');
-        this.openModal = !this.openModal
-      },
-      handleCloseModal(close){
-        this.openModal = close
+    handlehold() {
+      if (this.startGame) {
+        this.scoresPlayer[this.activePlayer] =
+          this.scoresPlayer[this.activePlayer] + this.currenScore;
+        if (!this.isWinner) {
+          this.changePlayer();
+        }
+      } else {
+        alert("chua tao tro choi");
       }
     },
-    components: { Player, Control, Dices, ruleVue }
+    handleNewgame() {
+      this.openModal = !this.openModal;
+    },
+    handleCloseModal(close) {
+      this.openModal = close;
+    },
+    handleStart(close) {
+      this.startGame = true;
+      this.openModal = close;
+      this.activePlayer = 0;
+      this.scoresPlayer = [0, 0];
+      this.currenScore = 0;
+      this.dices = [1, 1];
+    },
+    handleRollDice() {
+      if (this.startGame) {
+        const dice1 = Math.floor(Math.random() * 6) + 1;
+        const dice2 = Math.floor(Math.random() * 6) + 1;
+        this.dices = [dice1, dice2];
+        if (dice1 == 1 || dice2 == 1) {
+          let player = this.activePlayer;
+          setTimeout(function () {
+            alert(`nguoi cho so ${player + 1} quay so 1, mat luot ve 0`);
+          }, 1000);
+          this.changePlayer();
+        } else {
+          this.currenScore = this.currenScore + dice1 + dice2;
+        }
+      } else {
+        alert("chua tao tro choi");
+      }
+    },
+    changePlayer() {
+      this.activePlayer = this.activePlayer == 1 ? 0 : 1;
+      this.currenScore = 0;
+    },
+  },
+  components: { Player, Control, Dices, ruleVue },
 };
 </script>
 
@@ -97,6 +163,4 @@ body {
   box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.3);
   overflow: hidden;
 }
-
-
 </style>

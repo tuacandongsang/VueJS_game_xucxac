@@ -28,7 +28,7 @@
           >
             Close
           </button>
-          <button type="button" class="btn btn-primary" v-on:click="closeModal">
+          <button type="button" class="btn btn-primary" v-on:click="confirm">
             Save changes
           </button>
         </div>
@@ -46,6 +46,10 @@ export default {
     openModal: { type: Boolean, default: false },
   },
   methods: {
+    confirm(){
+       const close = !this.openModal;
+      this.$emit('handleStart', close)
+    },
     closeModal() {
       const close = !this.openModal;
       this.$emit("handleCloseModal", close);
@@ -56,5 +60,16 @@ export default {
 <style>
 .openModal {
   display: block;
+  animation: ease 1s open;
+}
+@keyframes open {
+  form {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.2);
+  }
 }
 </style>
