@@ -2,7 +2,7 @@
   <div id="app">
     <div class="wrapper clearfix">
       <Player
-      v-bind:isWinner="isWinner"
+        v-bind:isWinner="isWinner"
         v-bind:scoresPlayer="scoresPlayer"
         v-bind:activePlayer="activePlayer"
         v-bind:currenScore="currenScore"
@@ -42,18 +42,8 @@ export default {
       openModal: false,
       startGame: false,
       dices: [5, 4],
-      finalScore: 10,
+      finalScore: 12,
     };
-  },
-  computed: {
-    isWinner() {
-      // let { scoresPlayer, finalScore } = this;
-      if (this.scoresPlayer[0] >= this.finalScore || this.scoresPlayer[1] >= this.finalScore) {
-        this.startGame = false;
-        return true;
-      }
-      return false;
-    },
   },
   methods: {
     handleChangeFinalScore(e) {
@@ -65,11 +55,12 @@ export default {
       }
     },
     handlehold() {
-      if (this.startGame) {
-        this.scoresPlayer[this.activePlayer] =
-          this.scoresPlayer[this.activePlayer] + this.currenScore;
+      let { scoresPlayer, startGame, activePlayer, currenScore, changePlayer } =
+        this;
+      if (startGame) {
+        scoresPlayer[activePlayer] += currenScore;
         if (!this.isWinner) {
-          this.changePlayer();
+          changePlayer();
         }
       } else {
         alert("chua tao tro choi");
@@ -110,6 +101,18 @@ export default {
     changePlayer() {
       this.activePlayer = this.activePlayer == 1 ? 0 : 1;
       this.currenScore = 0;
+    },
+  },
+  computed: {
+    isWinner() {
+      let { scoresPlayer, finalScore } = this;
+      if (scoresPlayer[0] > finalScore || scoresPlayer[1] > finalScore) {
+        this.startGame = false;
+        return true;
+      }
+      console.log(this.scoresPlayer[0]);
+      return false;
+
     },
   },
   components: { Player, Control, Dices, ruleVue },
